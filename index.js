@@ -18,7 +18,7 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", (interaction) => {
-    console.log(interaction.data)
+    console.log("Command executed: " + interaction.data.name)
     if(interaction.data.name === "pop") {
         interaction.createMessage("***Pop*** ***Pop*** ***Pop***");
     }
