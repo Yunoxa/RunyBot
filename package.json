@@ -2,7 +2,6 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "eris": "^0.18.0",
-    "esm-import-directory": "^2.6.0",
     "require-dir": "^1.2.0"
   }
 }
