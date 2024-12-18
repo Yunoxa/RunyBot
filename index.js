@@ -1,26 +1,35 @@
-import { Client } from "eris";
-import "dotenv/config";
+const Eris = require("eris");
+const Commands = require("./commands");
+require('dotenv').config();
 
-const client = new Client(`Bot ${process.env.TOKEN}`, {
-    intents: ["guilds", "guildMembers", "guildPresences", "guildMessages"]
-});
+console.log(Commands);
+
+const client = new Eris(`Bot ${process.env.TOKEN}`);
 
 client.on("ready", () => {
     const guilds = JSON.parse(process.env.GUILDIDLIST);
     guilds.forEach(guildID => {
-        client.createGuildCommand(guildID, {
-            name: "pop",
-            description: "Pops",
-        });
+        for (const command in Commands) {
+            client.createGuildCommand(guildID, {
+                name: Commands[command].name,
+                description: Commands[command].description,
+                options: Commands[command].options
+            });
+        }
     });
 
     console.log("Ready!");
 });
 
-client.on("interactionCreate", (interaction) => {
-    console.log("Command executed: " + interaction.data.name)
-    if(interaction.data.name === "pop") {
-        interaction.createMessage("***Pop*** ***Pop*** ***Pop***");
+client.on("interactionCreate", async (interaction) => {
+    console.log("Command called: " + interaction.data.name);
+    for (const command in Commands) {
+        if (interaction.data.name == Commands[command].name) {
+            await interaction.defer();
+            console.log(`Executing ${interaction.data.name}...`);
+            await Commands[command].execute(interaction);
+            console.log(`I've finished executing ${interaction.data.name}!`);
+        }
     }
 });
 
