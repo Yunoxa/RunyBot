@@ -13,6 +13,6 @@ module.exports = {
         }
     ],
     execute(interaction) {
-        interaction.createMessage(`Runybot stares at ${interaction.data.options[0].value} and ***Pops***`);
+        interaction.createFollowup(`Runybot stares at ${interaction.data.options[0].value} and ***Pops***`);
     }
 };
