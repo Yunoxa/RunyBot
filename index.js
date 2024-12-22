@@ -21,7 +21,7 @@ client.on("ready", () => {
     console.log("Ready!");
 });
 
-client.on("interactionCreate", async (interaction) => {
+client.on("interactionCreate", async(interaction) => {
     console.log("Command called: " + interaction.data.name);
     for (const command in Commands) {
         if (interaction.data.name == Commands[command].name) {
@@ -31,6 +31,14 @@ client.on("interactionCreate", async (interaction) => {
             console.log(`I've finished executing ${interaction.data.name}!`);
         }
     }
+});
+
+client.on("messageReactionAdd", async(message) => {
+    console.log(`Reaction added || Message ID: ${message.id} || Channel ID: ${message.channel.id}`);
+});
+
+client.on("messageReactionRemove", async(message) => {
+    console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 });
 
 client.connect();

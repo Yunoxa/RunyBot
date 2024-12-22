@@ -36,6 +36,6 @@ module.exports = {
         console.log(`MessageID: ${getOptionValue(interaction.data.options, "messageid")}`);
         console.log(`Reaction: ${getOptionValue(interaction.data.options, "reaction")}`);
         console.log(`Role: ${getOptionValue(interaction.data.options, "role")}`);
-        interaction.createFollowup(`ChannelID: ${getOptionValue(interaction.data.options, "channelid")}`);
+        interaction.createFollowup(`I've finished setting a reaction listener on the message!`);
     }
 };
