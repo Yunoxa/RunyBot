@@ -2,6 +2,7 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "eris": "^0.18.0",
+    "mongodb": "^6.12.0",
     "require-dir": "^1.2.0"
   }
 }

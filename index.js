@@ -1,12 +1,15 @@
 const Eris = require("eris");
 const Commands = require("./commands");
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
-console.log(Commands);
+const mongoClient = new MongoClient(process.env.MONGOURI);
 
 const client = new Eris(`Bot ${process.env.TOKEN}`);
 
-client.on("ready", () => {
+client.on("ready", async () => {
+    await mongoClient.connect();
+
     const guilds = JSON.parse(process.env.GUILDIDLIST);
     guilds.forEach(guildID => {
         for (const command in Commands) {
