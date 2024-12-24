@@ -1,6 +1,8 @@
 const Eris = require("eris");
-const Constants = Eris.Constants;
+const { MongoClient } = require('mongodb');
 const getOptionValue = require("../utils/eris/getOptionValue.js");
+require('dotenv').config();
+const Constants = Eris.Constants;
 
 module.exports = {
     name: "reaction-role",
@@ -31,11 +33,22 @@ module.exports = {
             "required": true,
         }
     ],
-    execute(interaction) {
-        console.log(`ChannelID: ${getOptionValue(interaction.data.options, "channelid")}`);
-        console.log(`MessageID: ${getOptionValue(interaction.data.options, "messageid")}`);
-        console.log(`Reaction: ${getOptionValue(interaction.data.options, "reaction")}`);
-        console.log(`Role: ${getOptionValue(interaction.data.options, "role")}`);
+    async execute(interaction) {
+        const mongoClient = new MongoClient(process.env.MONGOURI);
+        await mongoClient.connect();
+
+        const database = mongoClient.db("RunyBot");
+        const messageCollection = database.collection("Messages");
+        const result = await messageCollection.insertOne({
+            channelID: getOptionValue(interaction.data.options, "channelid"),
+            messageID: getOptionValue(interaction.data.options, "messageid"),
+            reaction: getOptionValue(interaction.data.options, "reaction"),
+            role: getOptionValue(interaction.data.options, "role")
+        });
+        console.log(result);
+
+        await mongoClient.close();
+
         interaction.createFollowup(`I've finished setting a reaction listener on the message!`);
     }
 };

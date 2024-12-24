@@ -1,15 +1,10 @@
 const Eris = require("eris");
 const Commands = require("./commands");
-const { MongoClient } = require('mongodb');
 require('dotenv').config();
-
-const mongoClient = new MongoClient(process.env.MONGOURI);
 
 const client = new Eris(`Bot ${process.env.TOKEN}`);
 
 client.on("ready", async () => {
-    await mongoClient.connect();
-
     const guilds = JSON.parse(process.env.GUILDIDLIST);
     guilds.forEach(guildID => {
         for (const command in Commands) {
@@ -26,6 +21,7 @@ client.on("ready", async () => {
 
 client.on("interactionCreate", async(interaction) => {
     console.log("Command called: " + interaction.data.name);
+
     for (const command in Commands) {
         if (interaction.data.name == Commands[command].name) {
             await interaction.defer();
@@ -43,5 +39,7 @@ client.on("messageReactionAdd", async(message) => {
 client.on("messageReactionRemove", async(message) => {
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 });
+
+
 
 client.connect();
