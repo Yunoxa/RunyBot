@@ -26,7 +26,7 @@ client.on("interactionCreate", async(interaction) => {
         if (interaction.data.name == Commands[command].name) {
             await interaction.defer();
             console.log(`Executing ${interaction.data.name}...`);
-            await Commands[command].execute(interaction);
+            await Commands[command].execute(interaction, client);
             console.log(`I've finished executing ${interaction.data.name}!`);
         }
     }
