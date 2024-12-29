@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const client = new Eris(`Bot ${process.env.TOKEN}`);
 
-client.on("ready", async () => {
+client.on("ready", () => {
     const guilds = ["1252623727376732231"];
     guilds.forEach(guildID => {
         for (const command in Commands) {
