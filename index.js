@@ -26,7 +26,10 @@ client.on("interactionCreate", async(interaction) => {
         if (interaction.data.name == Commands[command].name) {
             await interaction.defer();
             console.log(`Executing ${interaction.data.name}...`);
-            await Commands[command].execute(interaction, client);
+            await Commands[command].execute(interaction, client).catch((error) => {
+                interaction.createFollowup(`**Error**: ${error}`);
+                console.error('Error:', error);
+            });
             console.log(`I've finished executing ${interaction.data.name}!`);
         }
     }
@@ -39,7 +42,5 @@ client.on("messageReactionAdd", async(message) => {
 client.on("messageReactionRemove", async(message) => {
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 });
-
-
 
 client.connect();
