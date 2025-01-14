@@ -37,14 +37,20 @@ client.on("interactionCreate", async(interaction) => {
 });
 
 client.on("messageReactionAdd", async(message, emoji, reactor) => {
-    console.log(`Reaction added || Message ID: ${message.id} || Channel ID: ${message.channel.id} || Reactor: ${reactor} || Emote: ${emoji}`);
+    if(emoji.id === null) {
+        emoji.id = emoji.name
+    }
+
+    console.log(`Reaction added || Message ID: ${message.id} || Channel ID: ${message.channel.id} || Reactor: ${reactor.username} || Emote: ${emoji.id}`);
 
     const mongoClient = new MongoClient(process.env.MONGOURI);
     await mongoClient.connect();
 
     const database = mongoClient.db("RunyBot");
     const getListenedMessages = await database.collection("Messages").find({
-        messageID: message.id
+        messageID: message.id,
+        channelID: message.channel.id,
+        emoteID: emoji.id
     });
 
     const listenedMessages = [];
@@ -54,7 +60,7 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     console.log(listenedMessages);
 
     listenedMessages.forEach((listener) => {
-        console.log(`The user ${reactor.username} reacted to the message ${message.id} which has a listener set for the emoji ${listener.reaction}, granting them the ${listener.role} role.`);
+        console.log(`The user ${reactor.username} reacted to the message ${message.id} which has a listener set for the emoji ${listener.emoteID}, granting them the ${listener.role} role.`);
     });
 });
 

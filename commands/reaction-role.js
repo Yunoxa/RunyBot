@@ -15,8 +15,8 @@ module.exports = {
             "required": true,
         },
         {
-            "name": "reaction",
-            "description": "The reaction to add the role for.",
+            "name": "emoteid",
+            "description": "The ID of the emote to add the role for.",
             "type": Constants.ApplicationCommandOptionTypes.STRING,
             "required": true,
         },
@@ -33,8 +33,6 @@ module.exports = {
             getOptionValue(interaction.data.options, "messageid")
         );
 
-        console.log(message);
-
         const mongoClient = new MongoClient(process.env.MONGOURI);
         await mongoClient.connect();
 
@@ -43,10 +41,9 @@ module.exports = {
         const result = await messageCollection.insertOne({
             channelID: interaction.channel.id,
             messageID: getOptionValue(interaction.data.options, "messageid"),
-            reaction: getOptionValue(interaction.data.options, "reaction"),
+            emoteID: getOptionValue(interaction.data.options, "emoteid"),
             role: getOptionValue(interaction.data.options, "role")
         });
-        console.log(result);
 
         await mongoClient.close();
 
