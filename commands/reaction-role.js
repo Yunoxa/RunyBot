@@ -50,6 +50,9 @@ module.exports = {
 
         await mongoClient.close();
 
-        interaction.createFollowup(`I've finished setting a reaction listener on the message!`);
+        interaction.createFollowup({
+            content: `I've finished setting a reaction listener on the message!`,
+            flags: 64
+        });
     }
 };
