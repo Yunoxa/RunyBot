@@ -56,7 +56,6 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     for await (const doc of getListenedMessages) {
         listenedMessages.push(doc);
     }
-    console.log(listenedMessages);
 
     listenedMessages.forEach((listener) => {
         client.addGuildMemberRole(reactor.guild.id, reactor.id, listener.role, "Reaction role")
@@ -67,8 +66,32 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     });
 });
 
-client.on("messageReactionRemove", async(message, emoji, reactor) => {
+client.on("messageReactionRemove", async(message, emoji, userID) => {
+    if(!emoji.id) {
+        emoji.id = emoji.name
+    }
+
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
+
+    const database = mongoClient.db("RunyBot");
+    const getListenedMessages = await database.collection("Messages").find({
+        messageID: message.id,
+        channelID: message.channel.id,
+        emoteID: emoji.id
+    });
+
+    const listenedMessages = [];
+    for await (const doc of getListenedMessages) {
+        listenedMessages.push(doc);
+    }
+
+    listenedMessages.forEach((listener) => {
+        client.removeGuildMemberRole(message.guildID, userID, listener.role, "Reaction role")
+              .catch((error) => {
+                  console.log(error);
+              });
+        console.log(`The user ${userID} removed their reaction to the message ${message.id} which has a listener set for the emoji ${listener.emoteID} (${emoji.name}), removing their ${listener.role} role.`);
+    });
 });
 
 mongoClient.connect();
