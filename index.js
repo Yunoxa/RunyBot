@@ -59,20 +59,16 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     }
     console.log(listenedMessages);
 
-    const roles = reactor.roles;
     listenedMessages.forEach((listener) => {
-        roles.push(listener.role);
+        client.addGuildMemberRole(reactor.guild.id, reactor.id, listener.role, "Reaction role")
+              .catch((error) => {
+                  console.log(error);
+              });
         console.log(`The user ${reactor.username} reacted to the message ${message.id} which has a listener set for the emoji ${listener.emoteID} (${emoji.name}), granting them the ${listener.role} role.`);
-    });
-
-    client.editGuildMember(reactor.guild.id, reactor.id, {
-        roles: roles
-    }).catch((error) => {
-        console.log(error);
     });
 });
 
-client.on("messageReactionRemove", async(message) => {
+client.on("messageReactionRemove", async(message, emoji, reactor) => {
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 });
 
