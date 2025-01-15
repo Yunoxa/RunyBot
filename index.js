@@ -37,7 +37,7 @@ client.on("interactionCreate", async(interaction) => {
 });
 
 client.on("messageReactionAdd", async(message, emoji, reactor) => {
-    if(emoji.id === null) {
+    if(!emoji.id) {
         emoji.id = emoji.name
     }
 
@@ -59,8 +59,16 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     }
     console.log(listenedMessages);
 
+    const roles = reactor.roles;
     listenedMessages.forEach((listener) => {
-        console.log(`The user ${reactor.username} reacted to the message ${message.id} which has a listener set for the emoji ${listener.emoteID}, granting them the ${listener.role} role.`);
+        roles.push(listener.role);
+        console.log(`The user ${reactor.username} reacted to the message ${message.id} which has a listener set for the emoji ${listener.emoteID} (${emoji.name}), granting them the ${listener.role} role.`);
+    });
+
+    client.editGuildMember(reactor.guild.id, reactor.id, {
+        roles: roles
+    }).catch((error) => {
+        console.log(error);
     });
 });
 
