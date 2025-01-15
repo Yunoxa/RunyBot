@@ -4,6 +4,8 @@ const { MongoClient } = require("mongodb");
 require('dotenv').config();
 
 const client = new Eris(`Bot ${process.env.TOKEN}`);
+const mongoClient = new MongoClient(process.env.MONGOURI);
+
 
 client.on("ready", () => {
     const guilds = ["1252623727376732231"];
@@ -25,9 +27,9 @@ client.on("interactionCreate", async(interaction) => {
 
     for(const command in Commands) {
         if(interaction.data.name == Commands[command].name) {
-            await interaction.defer();
+            await interaction.defer(64);
             console.log(`Executing ${interaction.data.name}...`);
-            await Commands[command].execute(interaction, client).catch((error) => {
+            await Commands[command].execute(interaction, client, mongoClient).catch((error) => {
                 interaction.createFollowup(`**Error**: ${error}`);
                 console.error('Error:', error);
             });
@@ -42,9 +44,6 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     }
 
     console.log(`Reaction added || Message ID: ${message.id} || Channel ID: ${message.channel.id} || Reactor: ${reactor.username} || Emote: ${emoji.id}`);
-
-    const mongoClient = new MongoClient(process.env.MONGOURI);
-    await mongoClient.connect();
 
     const database = mongoClient.db("RunyBot");
     const getListenedMessages = await database.collection("Messages").find({
@@ -72,4 +71,5 @@ client.on("messageReactionRemove", async(message, emoji, reactor) => {
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 });
 
+mongoClient.connect();
 client.connect();

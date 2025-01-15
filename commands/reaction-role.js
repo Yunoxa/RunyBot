@@ -1,7 +1,6 @@
 const Eris = require("eris");
 const { MongoClient } = require('mongodb');
 const getOptionValue = require("../utils/eris/getOptionValue.js");
-require('dotenv').config();
 const Constants = Eris.Constants;
 
 module.exports = {
@@ -27,14 +26,11 @@ module.exports = {
             "required": true,
         }
     ],
-    async execute(interaction, client) {
+    async execute(interaction, client, mongoClient) {
         const message = await client.getMessage(
             interaction.channel.id,
             getOptionValue(interaction.data.options, "messageid")
         );
-
-        const mongoClient = new MongoClient(process.env.MONGOURI);
-        await mongoClient.connect();
 
         const database = mongoClient.db("RunyBot");
         const messageCollection = database.collection("Messages");
@@ -45,6 +41,6 @@ module.exports = {
             role: getOptionValue(interaction.data.options, "role")
         });
 
-        await mongoClient.close();
+        interaction.createFollowup(`I've successfully created a reaction listener on the message!`);
     }
 };
