@@ -14,6 +14,7 @@ client.on("ready", () => {
             client.createGuildCommand(guildID, {
                 name: Commands[command].name,
                 description: Commands[command].description,
+                defaultMemberPermissions: Commands[command].defaultMemberPermissions,
                 options: Commands[command].options
             });
         }

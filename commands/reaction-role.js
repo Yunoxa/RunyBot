@@ -6,6 +6,7 @@ const Constants = Eris.Constants;
 module.exports = {
     name: "reaction-role",
     description: "Flags a message to be checked for a reaction and signals to add a specified role based on it.",
+    defaultMemberPermissions: 268435456,
     options: [
         {
             "name": "messageid",
