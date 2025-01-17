@@ -10,7 +10,7 @@ const mongoClient = new MongoClient(process.env.MONGOURI);
 
 
 client.on("ready", () => {
-    const guilds = ["1252623727376732231"];
+    const guilds = ["1252623727376732231", "942218317513515078"];
     guilds.forEach(guildID => {
         for (const command in Commands) {
             client.createGuildCommand(guildID, {
