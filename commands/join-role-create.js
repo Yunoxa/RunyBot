@@ -17,13 +17,26 @@ module.exports = {
   ],
   async execute(interaction, client, mongoClient) {
     const database = mongoClient.db("RunyBot");
-    const messageCollection = database.collection("JoinRoles");
+    const collection = database.collection("JoinRoles");
 
-    const result = await messageCollection.insertOne({
+    const getDocs = await database.collection("Messages").find({
       guildID: interaction.guildID,
       role: getOptionValue(interaction.data.options, "role")
     });
 
-    interaction.createFollowup(`I've successfully enabled this role for auto-provision to new users!`);
+    if ((await collection.countDocuments({
+      guildID: interaction.guildID,
+      role: getOptionValue(interaction.data.options, "role")
+    })) === 0) {
+      console.log("No matching documents found!");
+      const result = await collection.insertOne({
+        guildID: interaction.guildID,
+        role: getOptionValue(interaction.data.options, "role")
+      });
+
+      interaction.createFollowup(`I've successfully enabled this role for auto-provision to new users!`);
+    } else {
+      interaction.createFollowup("This role is already being added upon users joining!");
+    }
   }
 };
