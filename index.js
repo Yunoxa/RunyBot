@@ -88,13 +88,10 @@ client.on("messageReactionRemove", async(message, emoji, userID) => {
 });
 
 client.on("guildMemberAdd", async(guild, member) => {
-    console.log("ISREHGsiog")
     const database = mongoClient.db("RunyBot");
     const joinRoles = await database.collection("JoinRoles").find({
         guildID: guild.id
     });
-
-    console.log(joinRoles);
 
     joinRoles.forEach((doc) => {
         client.addGuildMemberRole(guild.id, member.id, doc.role, "Join role")
