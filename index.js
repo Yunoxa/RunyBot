@@ -47,16 +47,11 @@ client.on("messageReactionAdd", async(message, emoji, reactor) => {
     console.log(`Reaction added || Message ID: ${message.id} || Channel ID: ${message.channel.id} || Reactor: ${reactor.username} || Emote: ${emoji.id}`);
 
     const database = mongoClient.db("RunyBot");
-    const getListenedMessages = await database.collection("Messages").find({
+    const listenedMessages = await database.collection("Messages").find({
         messageID: message.id,
         channelID: message.channel.id,
         emoteID: emoji.id
     });
-
-    const listenedMessages = [];
-    for await (const doc of getListenedMessages) {
-        listenedMessages.push(doc);
-    }
 
     listenedMessages.forEach((listener) => {
         client.addGuildMemberRole(reactor.guild.id, reactor.id, listener.role, "Reaction role")
@@ -75,16 +70,11 @@ client.on("messageReactionRemove", async(message, emoji, userID) => {
     console.log(`Reaction removed || Message ID: ${message.id} Channel ID: ${message.channel.id}`);
 
     const database = mongoClient.db("RunyBot");
-    const getListenedMessages = await database.collection("Messages").find({
+    const listenedMessages = await database.collection("Messages").find({
         messageID: message.id,
         channelID: message.channel.id,
         emoteID: emoji.id
     });
-
-    const listenedMessages = [];
-    for await (const doc of getListenedMessages) {
-        listenedMessages.push(doc);
-    }
 
     listenedMessages.forEach((listener) => {
         client.removeGuildMemberRole(message.guildID, userID, listener.role, "Reaction role")
@@ -93,6 +83,10 @@ client.on("messageReactionRemove", async(message, emoji, userID) => {
               });
         console.log(`The user ${userID} removed their reaction to the message ${message.id} which has a listener set for the emoji ${listener.emoteID} (${emoji.name}), removing their ${listener.role} role.`);
     });
+});
+
+client.on("guildMemberAdd", async (guild, member) => {
+    console.log("meber joned");
 });
 
 mongoClient.connect();
