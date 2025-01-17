@@ -9,19 +9,16 @@ module.exports = {
   defaultMemberPermissions: 268435456,
   async execute(interaction, client, mongoClient) {
     const database = mongoClient.db("RunyBot");
-    const messageCollection = database.collection("JoinRoles");
+    const collection = database.collection("JoinRoles");
 
-    const getJoinRoles = await messageCollection.find({
+    const getJoinRoles = await collection.find({
       guildID: interaction.guildID
     });
 
     const joinRoles = [];
     await getJoinRoles.forEach((doc) => {
-      console.log(doc)
       joinRoles.push(`Role ID: ${doc.role}`)
     });
-
-    console.log(joinRoles)
 
     interaction.createFollowup({
       embeds: [{
