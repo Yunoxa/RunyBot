@@ -3,7 +3,9 @@ const Commands = require("./commands");
 const { MongoClient } = require("mongodb");
 require('dotenv').config();
 
-const client = new Eris(`Bot ${process.env.TOKEN}`);
+const client = new Eris(`Bot ${process.env.TOKEN}`, {
+    intents: ["all"]
+});
 const mongoClient = new MongoClient(process.env.MONGOURI);
 
 
@@ -85,8 +87,22 @@ client.on("messageReactionRemove", async(message, emoji, userID) => {
     });
 });
 
-client.on("guildMemberAdd", async (guild, member) => {
-    console.log("meber joned");
+client.on("guildMemberAdd", async(guild, member) => {
+    console.log("ISREHGsiog")
+    const database = mongoClient.db("RunyBot");
+    const joinRoles = await database.collection("JoinRoles").find({
+        guildID: guild.id
+    });
+
+    console.log(joinRoles);
+
+    joinRoles.forEach((doc) => {
+        client.addGuildMemberRole(guild.id, member.id, doc.role, "Join role")
+              .catch((error) => {
+                  console.log(error);
+              });
+        console.log(`The user ${member.username} received the role ${doc.role} upon joining the server.`);
+    });
 });
 
 mongoClient.connect();
