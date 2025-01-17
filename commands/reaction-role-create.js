@@ -4,7 +4,7 @@ const getOptionValue = require("../utils/eris/getOptionValue.js");
 const Constants = Eris.Constants;
 
 module.exports = {
-    name: "reaction-role",
+    name: "reaction-role-create",
     description: "Flags a message to be checked for a reaction and signals to add a specified role based on it.",
     defaultMemberPermissions: 268435456,
     options: [

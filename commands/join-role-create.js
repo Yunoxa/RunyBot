@@ -4,7 +4,7 @@ const getOptionValue = require("../utils/eris/getOptionValue.js");
 const Constants = Eris.Constants;
 
 module.exports = {
-  name: "join-role",
+  name: "join-role-create",
   description: "Provides a specified role to new users.",
   defaultMemberPermissions: 268435456,
   options: [
