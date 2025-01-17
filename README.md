@@ -1,1 +1,2 @@
-# This project is currently under construction, pls ignore
+# RunyBot
+This is a simple discord bot that manages roles.
