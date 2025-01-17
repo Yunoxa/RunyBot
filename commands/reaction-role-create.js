@@ -28,20 +28,25 @@ module.exports = {
         }
     ],
     async execute(interaction, client, mongoClient) {
-        const message = await client.getMessage(
-            interaction.channel.id,
-            getOptionValue(interaction.data.options, "messageid")
-        );
-
         const database = mongoClient.db("RunyBot");
-        const messageCollection = database.collection("Messages");
-        const result = await messageCollection.insertOne({
+        const collection = database.collection("Messages");
+
+        if ((await collection.countDocuments({
             channelID: interaction.channel.id,
             messageID: getOptionValue(interaction.data.options, "messageid"),
             emoteID: getOptionValue(interaction.data.options, "emoteid"),
             role: getOptionValue(interaction.data.options, "role")
-        });
+        })) === 0) {
+            const result = await collection.insertOne({
+                channelID: interaction.channel.id,
+                messageID: getOptionValue(interaction.data.options, "messageid"),
+                emoteID: getOptionValue(interaction.data.options, "emoteid"),
+                role: getOptionValue(interaction.data.options, "role")
+            });
 
-        interaction.createFollowup(`I've successfully created a reaction listener on the message!`);
+            interaction.createFollowup(`I've successfully created a reaction listener on the message!`);
+        } else {
+            interaction.createFollowup("This exact reaction listener configuration is already active!");
+        }
     }
 };

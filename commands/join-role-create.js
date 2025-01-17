@@ -28,7 +28,6 @@ module.exports = {
       guildID: interaction.guildID,
       role: getOptionValue(interaction.data.options, "role")
     })) === 0) {
-      console.log("No matching documents found!");
       const result = await collection.insertOne({
         guildID: interaction.guildID,
         role: getOptionValue(interaction.data.options, "role")
@@ -39,4 +38,4 @@ module.exports = {
       interaction.createFollowup("This role is already being added upon users joining!");
     }
   }
-};
+}
