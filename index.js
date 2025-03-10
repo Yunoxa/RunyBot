@@ -102,5 +102,9 @@ client.on("guildMemberAdd", async(guild, member) => {
     });
 });
 
+client.on("error", async(err) => {
+    console.log(err)
+});
+
 mongoClient.connect();
 client.connect();
